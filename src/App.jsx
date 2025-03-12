@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 // import { generateResponse } from "./connection";
 import { MessageModal } from "./models/message"
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from "remark-gfm";
+import { Blend } from "lucide-react"; 
 import { GridLoader } from "react-spinners";
 
 export default function ChatApp() {
+
+
   // State to store the conversation
   const [messages, setMessages] = useState([]);
   const [botmessage, setBotMessage] = useState("")
@@ -139,44 +143,70 @@ export default function ChatApp() {
 
   
   return (
-    <div className="flex flex-col h-screen p-4">
-      {messages.length == 0 && <div className="flex justify-center items-center h-full">Hello there! How may I help you?</div>}
-      <div className="flex-1  p-2 overflow-y-auto scrollbar-hide" id="chat-log">
+    <div className="flex flex-col h-screen bg-white p-4">
+      {/* Welcome Message */}
+      {messages.length === 0 && (
+        <div className="flex flex-col justify-center items-center h-full text-gray-500 text-lg font-semibold">
+          <Blend size={100} color="#ffeac9"/>
+          👋 Hello! How can I assist you today?
+        </div>
+      )}
+
+      {/* Chat Messages */}
+      <div className="flex-1 p-4 max-w-3xl w-full self-center overflow-y-auto transition-all scrollbar-hide border border-gray-200 rounded-lg shadow-md bg-gray-50"
+      style={{display: messages.length != 0 ? "flex" : `none`}}
+      id="chat-log">
         {messages.map((msg, index) => (
-          <div key={index} className="flex flex-col justify-start mb-2">
-            <div className="ml-2 text-gray-500">{msg.role === "user" ? "You" : "model"}</div>
-            <div className={`flex flex-col p-2 rounded-lg ${msg.role === "user" ? "bg-blue-100 text-blue-500" : "bg-green-100 text-green-500"}`}>
-              <ReactMarkdown>{msg.message}</ReactMarkdown>
+          <div key={index} className={`flex flex-col mb-4 ${msg.role === "user" ? "items-end" : "items-start"}`}>
+            <div className="text-sm text-gray-400 mb-1">{msg.role === "user" ? "You" : <Blend size={15}/>}</div>
+            <div
+              className={`p-3 text-[14px] max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl rounded-2xl shadow-md ${
+                msg.role === "user"
+                  ? "bg-blue-500 text-white rounded-br-none"
+                  : "bg-gray-200 text-gray-900 rounded-bl-none"
+              }`}
+            >
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.message}</ReactMarkdown>
             </div>
           </div>
         ))}
-        {
-          botmessage.length != 0 && <div key={messages.length} className="flex flex-col justify-start mb-2">
-            <div className="ml-2 text-gray-500">model</div>
-            <div className={`flex flex-col p-2 rounded-lg $bg-green-100 text-green-500 bg-green-100`}>
-              {botmessage}
+
+        {/* Bot Streaming Message */}
+        {botmessage && (
+          <div className="flex flex-col items-start mb-4">
+            <div className="text-sm text-gray-400 mb-1">🤖 AI</div>
+            <div className="p-3 text-[14px] max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl bg-gray-200 text-gray-900 rounded-2xl shadow-md rounded-bl-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{botmessage}</ReactMarkdown>
             </div>
           </div>
-        }{
-          isloading && <GridLoader size={5} />
-        }
+        )}
 
+        {/* Loading Indicator */}
+        {isloading && (
+          <div className="flex justify-center mt-4">
+            <GridLoader size={8} color="#3b82f6" />
+          </div>
+        )}
       </div>
-      <div className="flex mt-2">
+
+      {/* Input Field */}
+      <div className="flex self-center max-w-3xl w-full items-center gap-2 mt-4 bg-white p-3 rounded-xl shadow-lg border border-gray-200">
         <input
+          id="input"
           type="text"
-          className="flex-1 border p-2 rounded-lg shadow-md"
-          // const [input, setInput] = useState("");
           autoComplete="off"
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          id="input"
-          placeholder="Type a message..."
+          className="flex-1 px-4 min-w-0 py-2 bg-gray-100 text-gray-900 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:outline-none placeholder-gray-400"
+          placeholder="Type your message..."
         />
-        <button onClick={sendMessage} className="ml-2 p-2 bg-blue-500 text-white rounded-lg shadow-md">
+        <button
+          onClick={() => sendMessage()}
+          className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg shadow-md hover:bg-blue-600 transition-all"
+        >
           Send
         </button>
       </div>
     </div>
   );
-}
+};
 
