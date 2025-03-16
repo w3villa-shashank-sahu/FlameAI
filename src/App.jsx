@@ -209,7 +209,7 @@ export default function ChatApp() {
           </button>
         </div>
       </nav>
-      <div className={`flex flex-col flex-1 overflow-y-scroll transition-all scrollbar-hide duration-300 p-4`} id={"chat-log"}>
+      <div className={`flex flex-col flex-1 overflow-y-auto transition-all  duration-300 p-4`}>
         {/* Welcome Message */}
         {messages.length === 0 && (
           <div className="flex flex-col justify-center items-center h-full text-gray-500 text-lg font-semibold">
@@ -220,7 +220,8 @@ export default function ChatApp() {
 
         {/* Chat Messages */}
         <div
-          className={`p-4 max-w-3xl w-full self-center transition-all duration-300 border ${isDarkMode? 'border-gray-900' : 'border-gray-200'} rounded-lg shadow-md ${isDarkMode ? 'bg-[#0f1c30]' : 'bg-gray-50'}`}
+          className={`p-4 max-w-3xl h-full overflow-auto scrollbar-hide w-full self-center transition-all duration-300 border ${isDarkMode? 'border-gray-900' : 'border-gray-200'} rounded-lg shadow-md ${isDarkMode ? 'bg-[#0f1c30]' : 'bg-gray-50'}`}
+          id={"chat-log"}
           style={{ display: messages.length != 0 ? "inline" : `none` }}
         >
           {messages.map((msg, index) => (
