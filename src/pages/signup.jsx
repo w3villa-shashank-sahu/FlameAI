@@ -106,9 +106,10 @@ const SignupPage = () => {
         }`}>
         <div className={`w-full max-w-sm sm:max-w-md p-6 sm:p-8 rounded-xl shadow-md border transition-all duration-300 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
           }`}>
-          <h2 className={`text-xl sm:text-2xl flex gap-7 flex-col justify-center font-semibold text-center ${isDarkMode ? 'text-white' : 'text-gray-800'
+          <h2 className={`text-xl sm:text-2xl flex gap-7 flex-col justify-center font-semibold text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-800'
             }`}>
             <Flame size={100} className="self-center" color="#ffb300" />
+            <div className={`text-xl sm:text-2xl flex justify-center font-bold text-center ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Flame AI</div>
             Let's Get Started
           </h2>
           <p className={`text-center mt-1 sm:mt-2 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'
