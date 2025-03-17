@@ -126,8 +126,6 @@ export default function ChatApp() {
     setIsDarkMode(prevMode => !prevMode);
   };
 
-
-
   useEffect(() => {
     let token = localStorage.getItem("token");
     if (token == undefined) navigate(MyRoutes.login);
@@ -158,7 +156,7 @@ export default function ChatApp() {
 
   useEffect(() => {
     let last_pos = document.getElementById("chat-log").scrollHeight;
-    document.getElementById("chat-log").scrollTo({ top: last_pos });
+    document.getElementById("chat-log").scrollTo({ top: last_pos, behavior: 'smooth'});
   }, [messages, botmessage]);
 
   return (
@@ -176,25 +174,24 @@ export default function ChatApp() {
           <button
             onClick={toggleDarkMode}
             aria-label="Toggle Dark Mode"
-            className="relative w-6 h-6"
-          >
-            <div className="relative w-6 h-6">
+            className="relative w-6 h-6 self-center">
+            <div className="">
               {/* Moon Icon */}
               <Moon
-                className={`absolute inset-0 transition-all duration-300 ${isDarkMode ? "opacity-0 scale-90 rotate-90" : "opacity-100 scale-100 rotate-0"
+                className={`p-1 absolute inset-0 transition-all duration-300 ${isDarkMode ? "opacity-0 scale-90 rotate-90 hover:bg-gray-700" : "opacity-100 scale-100 rotate-0 hover:bg-gray-200"
                   }`}
               />
 
               {/* Sun Icon */}
               <Sun
-                className={`absolute inset-0 transition-all duration-300 ${isDarkMode ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-90 -rotate-90"
+                className={`absolute inset-0 transition-all duration-300 ${isDarkMode ? "opacity-100 scale-100 rotate-0 hover:bg-gray-700" : "opacity-0 scale-90 -rotate-90 hover:bg-gray-200"
                   }`}
               />
             </div>
           </button>
 
           {/* Profile Icon with Dropdown */}
-          <div className="relative profile-dropdown">
+          <div className="self-center relative profile-dropdown">
             <button
               aria-label="Profile"
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
@@ -211,10 +208,10 @@ export default function ChatApp() {
                 transition-all duration-200`}>
                 <button
                   onClick={handleLogout}
-                  className={`flex items-center w-full px-4 py-2 text-sm 
+                  className={`flex items-center w-full px-4 py-2 text-sm text-red-500
                     ${isDarkMode
-                      ? 'text-gray-300 hover:bg-gray-700'
-                      : 'text-gray-700 hover:bg-gray-100'}`}
+                      ? 'hover:bg-gray-700'
+                      : 'hover:bg-gray-100'}`}
                 >
                   Logout
                 </button>
@@ -223,7 +220,7 @@ export default function ChatApp() {
           </div>
         </div>
       </nav>
-      <div className={`flex flex-col flex-1 overflow-y-auto transition-all  duration-300 p-4`}>
+      <div className={`flex flex-col flex-1 overflow-y-auto transition-all duration-300 p-2`}>
         {/* Welcome Message */}
         {messages.length === 0 && (
           <div className="flex flex-col justify-center items-center h-full text-gray-500 text-lg font-semibold">
@@ -231,10 +228,9 @@ export default function ChatApp() {
             👋 Hello! How can I assist you today?
           </div>
         )}
-
         {/* Chat Messages */}
         <div
-          className={`p-4 max-w-3xl h-full overflow-auto scrollbar-hide w-full self-center transition-all duration-300 border ${isDarkMode ? 'border-gray-900' : 'border-gray-200'} rounded-lg shadow-md ${isDarkMode ? 'bg-[#0f1c30]' : 'bg-gray-50'}`}
+          className={`p-4 max-w-3xl h-full overflow-auto scrollbar-hide w-full self-center border ${isDarkMode ? 'border-gray-900' : 'border-gray-200'} rounded-lg shadow-md ${isDarkMode ? 'bg-[#0f1c30]' : 'bg-gray-50'}`}
           id={"chat-log"}
           style={{ display: messages.length != 0 ? "inline" : `none` }}
         >
@@ -249,14 +245,14 @@ export default function ChatApp() {
               </div>
               <div
                 className={`p-3 text-[14px] 
-                max-w-[80%]
+                max-w-[93%] sm:max-w-[80%]
                 overflow-x-auto
                 rounded-2xl shadow-md ${msg.role === "user"
                     ? "bg-blue-500 text-white rounded-br-none"
                     : `rounded-bl-none ${isDarkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`
                   }`}
               >
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} >
                   {msg.message}
                 </ReactMarkdown>
               </div>
@@ -267,7 +263,7 @@ export default function ChatApp() {
           {botmessage && (
             <div className="flex flex-col items-start mb-4">
               <div className="text-sm text-gray-400 mb-1"> <Flame size={17} /></div>
-              <div className={`p-3 text-[14px] max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl ${isDarkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"} rounded-2xl shadow-md rounded-bl-none`}>
+              <div className={`p-3 transition-all duration-300 text-[14px] max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl ${isDarkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"} rounded-2xl shadow-md rounded-bl-none`}>
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {botmessage}
                 </ReactMarkdown>
@@ -285,13 +281,13 @@ export default function ChatApp() {
 
       </div>
       {/* Input Field */}
-      <div className={`flex self-center mb-3 max-w-3xl w-full items-center gap-2 mt-4 p-3 rounded-xl shadow-lg border ${isDarkMode ? 'border-gray-800 bg-gray-900' : 'border-gray-200 bg-white'}`}>
+      <div className={`flex self-center mb-3 max-w-3xl w-full items-center gap-2 p-1 rounded-xl shadow-lg border ${isDarkMode ? 'border-gray-800 bg-gray-900' : 'border-gray-200 bg-white'}`}>
         <input
           id="input"
           type="text"
           autoComplete="off"
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          className={`flex-1 px-4 min-w-0 py-2   ${isDarkMode ? 'bg-[#151f35] text-white' : 'bg-gray-100 text-gray-900'} rounded-lg focus:ring-1 focus:ring-blue-500 focus:outline-none placeholder-gray-400`}
+          className={`flex-1 px-4 min-w-0 py-2   transition-all duration-300 ${isDarkMode ? 'bg-[#151f35] text-white' : 'bg-gray-100 text-gray-900'} rounded-lg focus:ring-1 focus:ring-blue-500 focus:outline-none placeholder-gray-400`}
           placeholder="Type your message..."
         />
         <button
